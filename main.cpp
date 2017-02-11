@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#include "input/keyboard.h"
 
 const int FPS = 60;
 const char* title = "Worlds";
@@ -41,12 +42,10 @@ int main(int argc, char* args[]) {
   while(1) {
     uint32_t start = SDL_GetTicks();
 
-    SDL_Event event;
+    InputProcess();
 
-    while(SDL_PollEvent(&event) != 0) {
-      if (event.type == SDL_QUIT) {
-        goto quit;
-      }
+    if (QuitKey == KeyPressed) {
+      break;
     }
 
     SDL_SetRenderDrawColor(renderer, 0xff, 0x00, 0x00, 0xff);
@@ -59,8 +58,6 @@ int main(int argc, char* args[]) {
       SDL_Delay(delay - now);
     }
   }
-
-quit:
 
   SDL_DestroyRenderer(renderer);
 
