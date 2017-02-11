@@ -1,40 +1,72 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int FPS = 60;
+const char* title = "Worlds";
 
-int main( int argc, char* args[] )
-{
-  //The window we'll be rendering to
-  SDL_Window* window = NULL;
+enum Mode { MenuMode, GameMode };
 
-  //The surface contained by the window
-  SDL_Surface* screenSurface = NULL;
+SDL_Window* window = NULL;
+SDL_Renderer* renderer =  NULL;
+Mode mode = GameMode;
 
-  //Initialize SDL
-  if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
-  {
-    printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
-    exit(1);
+int main(int argc, char* args[]) {
+
+  // Initialize SDL
+  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+    return 1;
   }
 
-  window = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-  if( window == NULL )
-  {
-    printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
-    exit(1);
+  int flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_WINDOW_FULLSCREEN_DESKTOP;
+
+  window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 0, 0, flags);
+
+  if (window == NULL) {
+    printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+    return 1;
   }
 
-  //Get window surface
-  screenSurface = SDL_GetWindowSurface( window );
+  flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 
-  //Fill the surface white
-  SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
+  renderer = SDL_CreateRenderer(window, -1, flags);
 
-  //Update the surface
-  SDL_UpdateWindowSurface( window );
+  if (renderer == NULL) {
+    printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
+    return 1;
+  }
 
-  //Wait two seconds
-  SDL_Delay( 2000 );
+  uint32_t delay = 1000/FPS;
+
+  while(1) {
+    uint32_t start = SDL_GetTicks();
+
+    SDL_Event event;
+
+    while(SDL_PollEvent(&event) != 0) {
+      if (event.type == SDL_QUIT) {
+        goto quit;
+      }
+    }
+
+    SDL_SetRenderDrawColor(renderer, 0xff, 0x00, 0x00, 0xff);
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
+
+    uint32_t now = SDL_GetTicks() - start;
+
+    if (now < delay) {
+      SDL_Delay(delay - now);
+    }
+  }
+
+quit:
+
+  SDL_DestroyRenderer(renderer);
+
+  SDL_DestroyWindow(window);
+
+  SDL_Quit();
+
+  return 0;
 }
