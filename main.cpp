@@ -14,6 +14,28 @@ SDL_Renderer* renderer = NULL;
 Mode mode = GameMode;
 input::Keyboard* keyboard = new input::Keyboard();
 
+void DrawMenu() {
+  if (keyboard->keys[input::ESC] == input::KEY_PRESSED) {
+    mode = GameMode;
+  }
+  SDL_SetRenderDrawColor(renderer, 0xff, 0x00, 0x00, 0xff);
+  SDL_RenderClear(renderer);
+  SDL_RenderPresent(renderer);
+}
+
+void DrawGame() {
+  int width, height;
+  SDL_GetWindowSize(window, &width, &height);
+
+  if (keyboard->keys[input::ESC] == input::KEY_PRESSED) {
+    mode = MenuMode;
+  }
+
+  SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xff);
+  SDL_RenderClear(renderer);
+  SDL_RenderPresent(renderer);
+}
+
 int main(int argc, char* args[]) {
   // Initialize SDL
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -48,13 +70,18 @@ int main(int argc, char* args[]) {
 
     keyboard->ProcessInput();
 
-    if (keyboard->keys [input::QUIT] == input::KEY_PRESSED) {
+    if (keyboard->keys[input::QUIT] == input::KEY_PRESSED) {
       break;
     }
 
-    SDL_SetRenderDrawColor(renderer, 0xff, 0x00, 0x00, 0xff);
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
+    switch (mode) {
+      case MenuMode:
+        DrawMenu();
+        break;
+      case GameMode:
+        DrawGame();
+        break;
+    }
 
     keyboard->UpdateState();
 
