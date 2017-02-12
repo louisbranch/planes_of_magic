@@ -5,24 +5,13 @@
 
 namespace input {
 
-enum KEYSTATE {
-  KEY_EMPTY = 0,
-  KEY_PRESSED = 1,
-  KEY_HELD = 2,
-  KEY_RELEASED = 3
-};
+enum KEYSTATE { KEY_EMPTY, KEY_PRESSED, KEY_HELD, KEY_RELEASED };
+
+enum KEY { ESC, NEXT, UP, DOWN, LEFT, RIGHT, ZOOM_IN, ZOOM_OUT, QUIT };
 
 class Keyboard {
  public:
-  KEYSTATE quit;
-  KEYSTATE esc;
-  KEYSTATE next_turn;
-  KEYSTATE up;
-  KEYSTATE down;
-  KEYSTATE left;
-  KEYSTATE right;
-  KEYSTATE zoom_in;
-  KEYSTATE zoom_out;
+  KEYSTATE keys[QUIT];
 
   void ProcessInput();
   void UpdateState();
