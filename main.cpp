@@ -59,6 +59,14 @@ void DrawGame() {
     cam->MoveRight();
   }
 
+  if (keyboard->keys[input::ZOOM_IN] == input::KEY_PRESSED){
+    cam->ZoomIn();
+  }
+
+  if (keyboard->keys[input::ZOOM_OUT] == input::KEY_PRESSED) {
+    cam->ZoomOut();
+  }
+
   int w = earth->w;
   int h = earth->h;
 
