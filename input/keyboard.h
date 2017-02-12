@@ -11,8 +11,6 @@ enum KEY { ESC, NEXT, UP, DOWN, LEFT, RIGHT, ZOOM_IN, ZOOM_OUT, QUIT };
 
 const int MAX_KEYS = QUIT;
 
-extern SDL_Keycode key_mapping[MAX_KEYS];
-
 class Keyboard {
  public:
   KEYSTATE keys[MAX_KEYS];

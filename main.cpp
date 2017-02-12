@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 
+#include "camera/camera.h"
 #include "input/keyboard.h"
 
 const int FPS = 60;
@@ -13,6 +14,7 @@ SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 Mode mode = GameMode;
 input::Keyboard* keyboard = new input::Keyboard();
+camera::Camera* cam = new camera::Camera();
 
 void DrawMenu() {
   if (keyboard->keys[input::ESC] == input::KEY_PRESSED) {
@@ -24,8 +26,8 @@ void DrawMenu() {
 }
 
 void DrawGame() {
-  int width, height;
-  SDL_GetWindowSize(window, &width, &height);
+  SDL_GetWindowSize(window, &cam->w, &cam->h);
+
 
   if (keyboard->keys[input::ESC] == input::KEY_PRESSED) {
     mode = MenuMode;
@@ -62,6 +64,13 @@ int main(int argc, char* args[]) {
     printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
     return 1;
   }
+
+  // Set default camera values
+  cam->tile_size = 50;
+  cam->speed = 10;
+  cam->min_zoom = 1;
+  cam->max_zoom = 3;
+  cam->zoom = 1;
 
   uint32_t delay = 1000 / FPS;
 
