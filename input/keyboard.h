@@ -1,15 +1,21 @@
 #ifndef KEYBOARD_H_
 #define KEYBOARD_H_
 
-enum KeyState {
-  KeyEmpty,
-  KeyPressed,
-  KeyHeld,
-  KeyReleased
+namespace input {
+
+enum KEYSTATE {
+  KEY_EMPTY = 0,
+  KEY_PRESSED = 1,
+  KEY_HELD = 2,
+  KEY_RELEASED = 3
 };
 
-extern KeyState QuitKey;
+class Keyboard {
+ public:
+  KEYSTATE quit;
 
-void InputProcess();
+  void ProcessInput();
+};
+}
 
-#endif
+#endif  // KEYBOARD_H_

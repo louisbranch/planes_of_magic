@@ -1,5 +1,7 @@
-#include <SDL2/SDL.h>
 #include <stdio.h>
+
+#include <SDL2/SDL.h>
+
 #include "input/keyboard.h"
 
 const int FPS = 60;
@@ -10,6 +12,7 @@ enum Mode { MenuMode, GameMode };
 SDL_Window* window = NULL;
 SDL_Renderer* renderer =  NULL;
 Mode mode = GameMode;
+input::Keyboard* keyboard = new input::Keyboard();
 
 int main(int argc, char* args[]) {
 
@@ -19,7 +22,7 @@ int main(int argc, char* args[]) {
     return 1;
   }
 
-  int flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_WINDOW_FULLSCREEN_DESKTOP;
+  uint32_t flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_WINDOW_FULLSCREEN_DESKTOP;
 
   window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 0, 0, flags);
 
@@ -42,9 +45,9 @@ int main(int argc, char* args[]) {
   while(1) {
     uint32_t start = SDL_GetTicks();
 
-    InputProcess();
+    keyboard->ProcessInput();
 
-    if (QuitKey == KeyPressed) {
+    if (keyboard->quit == input::KEY_PRESSED) {
       break;
     }
 
