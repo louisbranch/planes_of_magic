@@ -1,6 +1,7 @@
 #include "camera.h"
 
 #include <math.h>
+#include <stdio.h>
 
 #include "../math/math.h"
 
@@ -16,12 +17,15 @@ int Camera::Clip(int* width, int* height) {
   int size = ceil(tile_size / zoom);
 
   // camera tile-based size
-  *width = math::Clamp(ceil(w / size), 0, *width);
-  *height = math::Clamp(ceil(h / size), 0, *height);
+  int cam_w = math::Clamp(ceil(w / size), 0, *width);
+  int cam_h = math::Clamp(ceil(h / size), 0, *height);
 
   // camera tile-based position
-  int x = math::Clamp(floor(x / size), 0, *width - w);
-  int y = math::Clamp(floor(y / size), 0, *height - h);
+  int x = math::Clamp(floor(x / size), 0, *width - cam_w);
+  int y = math::Clamp(floor(y / size), 0, *height - cam_h);
+
+  *width = cam_w;
+  *height = cam_h;
 
   return x + (y * *width);
 }

@@ -1,4 +1,4 @@
-OBJS = main.cpp input/keyboard.cpp math/math.cpp camera/camera.cpp
+OBJS = main.cpp input/keyboard.cpp math/math.cpp camera/camera.cpp map/map.cpp
 
 CC = g++
 
