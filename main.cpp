@@ -39,6 +39,26 @@ void DrawGame() {
     mode = MenuMode;
   }
 
+  if (keyboard->keys[input::UP] == input::KEY_PRESSED ||
+      keyboard->keys[input::UP] == input::KEY_HELD) {
+    cam->MoveUp();
+  }
+
+  if (keyboard->keys[input::DOWN] == input::KEY_PRESSED ||
+      keyboard->keys[input::DOWN] == input::KEY_HELD) {
+    cam->MoveDown();
+  }
+
+  if (keyboard->keys[input::LEFT] == input::KEY_PRESSED ||
+      keyboard->keys[input::LEFT] == input::KEY_HELD) {
+    cam->MoveLeft();
+  }
+
+  if (keyboard->keys[input::RIGHT] == input::KEY_PRESSED ||
+      keyboard->keys[input::RIGHT] == input::KEY_HELD) {
+    cam->MoveRight();
+  }
+
   int w = earth->w;
   int h = earth->h;
 
@@ -54,9 +74,9 @@ void DrawGame() {
     for (int x = 0; x < w; x++) {
       map::Tile t = earth->tiles[start + x];
       if (t.terrain == map::WATER) {
-        SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xff, 0xff);
+        SDL_SetRenderDrawColor(renderer, start * x, 0x00, 0xff, 0xff);
       } else {
-        SDL_SetRenderDrawColor(renderer, 0x00, 0xff, 0x00, 0xff);
+        SDL_SetRenderDrawColor(renderer, start * y, 0xff, 0x00, 0xff);
       }
       SDL_RenderFillRect(renderer, &rect);
       rect.x += size;

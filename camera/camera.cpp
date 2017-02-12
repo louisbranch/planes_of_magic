@@ -14,19 +14,22 @@ void Camera::ZoomIn() { zoom = math::Clamp(zoom - 1, min_zoom, max_zoom); }
 void Camera::ZoomOut() { zoom = math::Clamp(zoom + 1, min_zoom, max_zoom); }
 
 int Camera::Clip(int* width, int* height) {
-  int size = ceil(tile_size / zoom);
+  double size = ceil(tile_size / zoom);
+
+  int map_width = *width;
+  int map_height = *height;
 
   // camera tile-based size
-  int cam_w = math::Clamp(ceil(w / size), 0, *width);
-  int cam_h = math::Clamp(ceil(h / size), 0, *height);
+  int cam_w = math::Clamp(ceil(w / size), 0, map_width);
+  int cam_h = math::Clamp(ceil(h / size), 0, map_height);
 
   // camera tile-based position
-  int x = math::Clamp(floor(x / size), 0, *width - cam_w);
-  int y = math::Clamp(floor(y / size), 0, *height - cam_h);
+  int cam_x = math::Clamp(floor(x / size), 0, map_width - cam_w);
+  int cam_y = math::Clamp(floor(y / size), 0, map_height - cam_h);
 
   *width = cam_w;
   *height = cam_h;
 
-  return x + (y * *width);
+  return cam_x + (cam_y * map_width);
 }
 }
