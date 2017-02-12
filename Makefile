@@ -4,7 +4,7 @@ CC = g++
 
 COMPILER_FLAGS = -w
 
-LINKER_FLAGS = -lSDL2
+LINKER_FLAGS = -lSDL2 -lnoise
 
 OBJ_NAME = worlds
 

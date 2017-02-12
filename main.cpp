@@ -59,7 +59,7 @@ void DrawGame() {
     cam->MoveRight();
   }
 
-  if (keyboard->keys[input::ZOOM_IN] == input::KEY_PRESSED){
+  if (keyboard->keys[input::ZOOM_IN] == input::KEY_PRESSED) {
     cam->ZoomIn();
   }
 
@@ -81,11 +81,11 @@ void DrawGame() {
   for (int y = 0; y < h; y++) {
     for (int x = 0; x < w; x++) {
       map::Tile t = earth->tiles[start + x];
-      if (t.terrain == map::WATER) {
-        SDL_SetRenderDrawColor(renderer, start * x, 0x00, 0xff, 0xff);
-      } else {
-        SDL_SetRenderDrawColor(renderer, start * y, 0xff, 0x00, 0xff);
-      }
+      double e = t.elevation;
+      double m = t.moisture;
+
+      SDL_SetRenderDrawColor(renderer, 0x00, 0xff * e, 0xff * m, 0xff);
+
       SDL_RenderFillRect(renderer, &rect);
       rect.x += size;
     }

@@ -5,7 +5,11 @@ namespace map {
 
 enum TERRAIN { WATER, GRASS };
 
-typedef struct Tile { TERRAIN terrain; } Tile;
+typedef struct Tile {
+  TERRAIN terrain;
+  double elevation;
+  double moisture;
+} Tile;
 
 class Map {
  public:
@@ -15,6 +19,11 @@ class Map {
 
   void Build();
 };
+
+double noise_elevation(double, double);
+double noise_moisture(double, double);
+
+TERRAIN biome(double, double);
 }
 
 #endif  // map_H_
