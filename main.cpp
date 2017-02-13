@@ -90,7 +90,7 @@ void DrawGame() {
       if (t.terrain == map::OCEAN) {
         SDL_RenderCopy(renderer, water->texture, &tile, &rect);
       } else {
-        tile.x = (t.terrain % 5) * 50;
+        tile.x = ((t.terrain - 1) % 5) * 50;
 
         SDL_RenderCopy(renderer, land->texture, &tile, &rect);
       }
