@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 
 #include "camera/camera.h"
+#include "img/img.h"
 #include "input/keyboard.h"
 #include "map/map.h"
 
@@ -18,6 +19,8 @@ Mode mode = GameMode;
 input::Keyboard* keyboard = new input::Keyboard();
 camera::Camera* cam = new camera::Camera();
 map::Map* earth = new map::Map();
+img::Img* land = new img::Img();
+img::Img* water = new img::Img();
 
 void DrawMenu() {
   if (keyboard->keys[input::ESC] == input::KEY_PRESSED) {
@@ -77,16 +80,21 @@ void DrawGame() {
   SDL_RenderClear(renderer);
 
   SDL_Rect rect = {0, 0, size, size};
+  SDL_Rect tile = {0, 0, 50, 50};
 
   for (int y = 0; y < h; y++) {
     for (int x = 0; x < w; x++) {
       map::Tile t = earth->tiles[start + x];
-      double e = t.elevation;
-      double m = t.moisture;
+      tile.x = 0;
 
-      SDL_SetRenderDrawColor(renderer, 0x00, 0xff * e, 0xff * m, 0xff);
+      if (t.terrain == map::OCEAN) {
+        SDL_RenderCopy(renderer, water->texture, &tile, &rect);
+      } else {
+        tile.x = (t.terrain % 5) * 50;
 
-      SDL_RenderFillRect(renderer, &rect);
+        SDL_RenderCopy(renderer, land->texture, &tile, &rect);
+      }
+
       rect.x += size;
     }
     rect.x = 0;
@@ -123,6 +131,10 @@ int main(int argc, char* args[]) {
     printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
     return 1;
   }
+
+  // Load assets
+  land->Load(renderer, "assets/imgs/land.png");
+  water->Load(renderer, "assets/imgs/water.png");
 
   // Set camera values
   cam->tile_size = 50;
@@ -164,6 +176,11 @@ int main(int argc, char* args[]) {
       SDL_Delay(delay - now);
     }
   }
+
+  // Clean-up before quiting
+
+  SDL_DestroyTexture(land->texture);
+  SDL_DestroyTexture(water->texture);
 
   SDL_DestroyRenderer(renderer);
 

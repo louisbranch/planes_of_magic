@@ -1,10 +1,10 @@
-OBJS = main.cpp input/keyboard.cpp math/math.cpp camera/camera.cpp map/map.cpp
+OBJS = main.cpp input/keyboard.cpp math/math.cpp camera/camera.cpp map/map.cpp img/img.cpp
 
 CC = g++
 
 COMPILER_FLAGS = -w
 
-LINKER_FLAGS = -lSDL2 -lnoise
+LINKER_FLAGS = -lSDL2 -lSDL2_image -lnoise
 
 OBJ_NAME = worlds
 

@@ -3,12 +3,26 @@
 
 namespace map {
 
-enum TERRAIN { WATER, GRASS };
+enum TERRAIN {
+  OCEAN,
+  BEACH,
+  SCORCHED,
+  BARE,
+  TUNDRA,
+  SNOW,
+  TEMPERATE_DESERT,
+  SHRUBLAND,
+  TAIGA,
+  GRASSLAND,
+  TEMPERATE_DECIDUOUS_FOREST,
+  TEMPERATE_RAIN_FOREST,
+  SUBTROPICAL_DESERT,
+  TROPICAL_SEASONAL_FOREST,
+  TROPICAL_RAIN_FOREST
+};
 
 typedef struct Tile {
   TERRAIN terrain;
-  double elevation;
-  double moisture;
 } Tile;
 
 class Map {
@@ -20,8 +34,8 @@ class Map {
   void Build();
 };
 
-double noise_elevation(double, double);
-double noise_moisture(double, double);
+double noise1(double, double);
+double noise2(double, double);
 
 TERRAIN biome(double, double);
 }
