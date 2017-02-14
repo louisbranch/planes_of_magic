@@ -7,7 +7,20 @@ namespace input {
 
 enum KEYSTATE { KEY_EMPTY, KEY_PRESSED, KEY_HELD, KEY_RELEASED };
 
-enum KEY { ESC, NEXT, UP, DOWN, LEFT, RIGHT, ZOOM_IN, ZOOM_OUT, QUIT };
+enum KEY {
+  ESC,
+  SELECT,
+  ACTION,
+  HOLD,
+  NEXT,
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT,
+  ZOOM_IN,
+  ZOOM_OUT,
+  QUIT
+};
 
 const int MAX_KEYS = QUIT;
 

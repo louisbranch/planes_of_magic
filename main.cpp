@@ -16,11 +16,12 @@ enum Mode { MenuMode, GameMode };
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 Mode mode = GameMode;
-input::Keyboard* keyboard = new input::Keyboard();
-camera::Camera* cam = new camera::Camera();
-map::Map* earth = new map::Map();
-img::Img* land = new img::Img();
-img::Img* water = new img::Img();
+
+auto keyboard = new input::Keyboard();
+auto cam = new camera::Camera();
+auto earth = new map::Map();
+auto land = new img::Img();
+auto water = new img::Img();
 
 void DrawMenu() {
   if (keyboard->keys[input::ESC] == input::KEY_PRESSED) {
