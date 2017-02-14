@@ -22,11 +22,13 @@ enum KEY {
   QUIT
 };
 
-const int MAX_KEYS = QUIT;
+const int MAX_KEYS = QUIT + 1;
 
 class Keyboard {
  public:
   KEYSTATE keys[MAX_KEYS];
+  int x;
+  int y;
 
   void ProcessInput();
   void UpdateState();

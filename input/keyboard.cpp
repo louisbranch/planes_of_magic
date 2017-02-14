@@ -45,6 +45,10 @@ void Keyboard::ProcessInput() {
           }
         }
         break;
+      case SDL_MOUSEMOTION:
+        x = event.motion.x;
+        y = event.motion.y;
+        break;
       case SDL_MOUSEBUTTONDOWN:
         sym = event.button.button;
         for (int i = 0; i < MAX_KEYS; i++) {

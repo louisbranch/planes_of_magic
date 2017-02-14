@@ -39,26 +39,33 @@ void DrawGame() {
   cam->max_w = earth->w * cam->tile_size / cam->zoom - cam->w / 2;
   cam->max_h = earth->h * cam->tile_size / cam->zoom - cam->h / 2;
 
+  double scroll_x = cam->w * 0.05;
+  double scroll_y = cam->h * 0.05;
+
   if (keyboard->keys[input::ESC] == input::KEY_PRESSED) {
     mode = MenuMode;
   }
 
-  if (keyboard->keys[input::UP] == input::KEY_PRESSED ||
+  if (keyboard->y < scroll_y ||
+      keyboard->keys[input::UP] == input::KEY_PRESSED ||
       keyboard->keys[input::UP] == input::KEY_HELD) {
     cam->MoveUp();
   }
 
-  if (keyboard->keys[input::DOWN] == input::KEY_PRESSED ||
+  if (keyboard->y > (cam->h - scroll_y) ||
+      keyboard->keys[input::DOWN] == input::KEY_PRESSED ||
       keyboard->keys[input::DOWN] == input::KEY_HELD) {
     cam->MoveDown();
   }
 
-  if (keyboard->keys[input::LEFT] == input::KEY_PRESSED ||
+  if (keyboard->x < scroll_x ||
+      keyboard->keys[input::LEFT] == input::KEY_PRESSED ||
       keyboard->keys[input::LEFT] == input::KEY_HELD) {
     cam->MoveLeft();
   }
 
-  if (keyboard->keys[input::RIGHT] == input::KEY_PRESSED ||
+  if (keyboard->x > (cam->w - scroll_x) ||
+      keyboard->keys[input::RIGHT] == input::KEY_PRESSED ||
       keyboard->keys[input::RIGHT] == input::KEY_HELD) {
     cam->MoveRight();
   }
@@ -75,6 +82,7 @@ void DrawGame() {
   int h = earth->h;
 
   int start = cam->Clip(&w, &h);
+
   int size = ceil(cam->tile_size / cam->zoom);
 
   SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xff);
@@ -113,6 +121,8 @@ int main(int argc, char* args[]) {
     return 1;
   }
 
+  SDL_LogSetAllPriority(SDL_LOG_PRIORITY_INFO);
+
   uint32_t flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC |
                    SDL_WINDOW_FULLSCREEN_DESKTOP;
 
@@ -136,6 +146,10 @@ int main(int argc, char* args[]) {
   // Load assets
   land->Load(renderer, "assets/imgs/land.png");
   water->Load(renderer, "assets/imgs/water.png");
+
+  // Set keyboard values
+  SDL_PumpEvents();
+  SDL_GetMouseState(&keyboard->x, &keyboard->y);
 
   // Set camera values
   cam->tile_size = 50;
