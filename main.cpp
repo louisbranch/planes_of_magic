@@ -36,8 +36,11 @@ void DrawMenu() {
 void DrawGame() {
   SDL_GetWindowSize(window, &cam->w, &cam->h);
 
-  cam->max_w = earth->w * cam->tile_size / cam->zoom - cam->w / 2;
-  cam->max_h = earth->h * cam->tile_size / cam->zoom - cam->h / 2;
+  cam->map_w = earth->w;
+  cam->map_h = earth->h;
+
+  cam->max_w = earth->w * cam->tile_size / cam->zoom - cam->w;
+  cam->max_h = earth->h * cam->tile_size / cam->zoom - cam->h;
 
   double scroll_x = cam->w * 0.05;
   double scroll_y = cam->h * 0.05;
@@ -151,17 +154,17 @@ int main(int argc, char* args[]) {
   SDL_PumpEvents();
   SDL_GetMouseState(&keyboard->x, &keyboard->y);
 
+  // Set map values
+  earth->w = 200;
+  earth->h = 150;
+  earth->Build();
+
   // Set camera values
   cam->tile_size = 50;
   cam->speed = 10;
   cam->min_zoom = 1;
   cam->max_zoom = 3;
   cam->zoom = 1;
-
-  // Set map values
-  earth->w = 200;
-  earth->h = 150;
-  earth->Build();
 
   uint32_t delay = 1000 / FPS;
 

@@ -1,11 +1,11 @@
 OBJS = input/keyboard.cpp math/math.cpp camera/camera.cpp map/map.cpp img/img.cpp
 TEST = camera/camera_test.cpp
 
-CC = g++
+CC = clang
 
 COMPILER_FLAGS = -w
 
-LINKER_FLAGS = -lSDL2 -lSDL2_image -lnoise
+LINKER_FLAGS = -lm -lSDL2 -lSDL2_image -lnoise -lstdc++
 
 OBJ_NAME = magic
 

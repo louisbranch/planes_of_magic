@@ -39,7 +39,9 @@ void Map::Build() {
 
       TERRAIN t = biome(e, m);
 
-      tiles[x + y * w] = {terrain : t};
+      Tile tile = {terrain : t};
+
+      tiles[x + y * w] = tile;
     }
   }
 }

@@ -10,8 +10,8 @@ void Camera::MoveUp() { y = math::Clamp(y - speed, 0, max_h); }
 void Camera::MoveDown() { y = math::Clamp(y + speed, 0, max_h); }
 void Camera::MoveLeft() { x = math::Clamp(x - speed, 0, max_w); }
 void Camera::MoveRight() { x = math::Clamp(x + speed, 0, max_w); }
-void Camera::ZoomIn() { zoom = math::Clamp(zoom - 1, min_zoom, max_zoom); }
-void Camera::ZoomOut() { zoom = math::Clamp(zoom + 1, min_zoom, max_zoom); }
+void Camera::ZoomIn() { ChangeZoom(zoom - 1); }
+void Camera::ZoomOut() { ChangeZoom(zoom + 1); }
 
 int Camera::Clip(int* width, int* height) {
   double size = ceil(tile_size / zoom);
@@ -31,5 +31,28 @@ int Camera::Clip(int* width, int* height) {
   *height = cam_h;
 
   return cam_x + (cam_y * map_width);
+}
+
+void Camera::ChangeZoom(int new_zoom) {
+  int old_size = tile_size / zoom;
+
+  int old_w = map_w * old_size;
+  int old_h = map_h * old_size;
+
+  int mid_x = x + (w / 2);
+  int mid_y = y + (h / 2);
+
+  zoom = math::Clamp(new_zoom, min_zoom, max_zoom);
+
+  int new_size = tile_size / zoom;
+
+  int new_w = map_w * new_size;
+  int new_h = map_h * new_size;
+
+  int mx = mid_x * new_size / old_size;
+  int my = mid_y * new_size / old_size;
+
+  x = math::Clamp(mx - (w / 2), 0, map_w - w);
+  y = math::Clamp(my - (h / 2), 0, map_h - h);
 }
 }
