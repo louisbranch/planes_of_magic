@@ -36,23 +36,20 @@ int Camera::Clip(int* width, int* height) {
 void Camera::ChangeZoom(int new_zoom) {
   int old_size = tile_size / zoom;
 
-  int old_w = map_w * old_size;
-  int old_h = map_h * old_size;
-
-  int mid_x = x + (w / 2);
-  int mid_y = y + (h / 2);
-
   zoom = math::Clamp(new_zoom, min_zoom, max_zoom);
+
+  int mid_x = x + w / 2;
+  int mid_y = y + h / 2;
 
   int new_size = tile_size / zoom;
 
   int new_w = map_w * new_size;
   int new_h = map_h * new_size;
 
-  int mx = mid_x * new_size / old_size;
-  int my = mid_y * new_size / old_size;
+  int new_x = (mid_x * new_size / old_size) - w / 2;
+  int new_y = (mid_y * new_size / old_size) - h / 2;
 
-  x = math::Clamp(mx - (w / 2), 0, map_w - w);
-  y = math::Clamp(my - (h / 2), 0, map_h - h);
+  x = math::Clamp(new_x, 0, new_w - w);
+  y = math::Clamp(new_y, 0, new_h - h);
 }
 }
