@@ -3,10 +3,10 @@
 
 #include <SDL2/SDL.h>
 
-#include "camera/camera.h"
+#include "camera.h"
 #include "img/img.h"
 #include "input/keyboard.h"
-#include "map/map.h"
+#include "map.h"
 
 const int FPS = 60;
 const char* title = "Worlds";
@@ -18,8 +18,8 @@ SDL_Renderer* renderer = NULL;
 Mode mode = GameMode;
 
 auto keyboard = new input::Keyboard();
-auto cam = new camera::Camera();
-auto earth = new map::Map();
+auto cam = new Camera();
+auto earth = new Map();
 auto land = new img::Img();
 auto water = new img::Img();
 
@@ -34,16 +34,18 @@ void DrawMenu() {
 }
 
 void DrawGame() {
-  SDL_GetWindowSize(window, &cam->w, &cam->h);
+  SDL_GetWindowSize(window, &cam->win_size.w, &cam->win_size.h);
 
-  cam->map_w = earth->w;
-  cam->map_h = earth->h;
+  cam->map_size.w = earth->size.w;
+  cam->map_size.h = earth->size.h;
 
-  cam->max_w = earth->w * cam->tile_size / cam->zoom - cam->w;
-  cam->max_h = earth->h * cam->tile_size / cam->zoom - cam->h;
+  cam->max_size.w =
+      earth->size.w * cam->tile_size / cam->zoom - cam->win_size.w;
+  cam->max_size.h =
+      earth->size.h * cam->tile_size / cam->zoom - cam->win_size.h;
 
-  double scroll_x = cam->w * 0.05;
-  double scroll_y = cam->h * 0.05;
+  double scroll_x = cam->win_size.w * 0.05;
+  double scroll_y = cam->win_size.h * 0.05;
 
   if (keyboard->keys[input::ESC] == input::KEY_PRESSED) {
     mode = MenuMode;
@@ -52,39 +54,39 @@ void DrawGame() {
   if (keyboard->y < scroll_y ||
       keyboard->keys[input::UP] == input::KEY_PRESSED ||
       keyboard->keys[input::UP] == input::KEY_HELD) {
-    cam->MoveUp();
+    MoveCameraUp(cam);
   }
 
-  if (keyboard->y > (cam->h - scroll_y) ||
+  if (keyboard->y > (cam->win_size.h - scroll_y) ||
       keyboard->keys[input::DOWN] == input::KEY_PRESSED ||
       keyboard->keys[input::DOWN] == input::KEY_HELD) {
-    cam->MoveDown();
+    MoveCameraDown(cam);
   }
 
   if (keyboard->x < scroll_x ||
       keyboard->keys[input::LEFT] == input::KEY_PRESSED ||
       keyboard->keys[input::LEFT] == input::KEY_HELD) {
-    cam->MoveLeft();
+    MoveCameraLeft(cam);
   }
 
-  if (keyboard->x > (cam->w - scroll_x) ||
+  if (keyboard->x > (cam->win_size.w - scroll_x) ||
       keyboard->keys[input::RIGHT] == input::KEY_PRESSED ||
       keyboard->keys[input::RIGHT] == input::KEY_HELD) {
-    cam->MoveRight();
+    MoveCameraRight(cam);
   }
 
   if (keyboard->keys[input::ZOOM_IN] == input::KEY_PRESSED) {
-    cam->ZoomIn();
+    ZoomCameraIn(cam);
   }
 
   if (keyboard->keys[input::ZOOM_OUT] == input::KEY_PRESSED) {
-    cam->ZoomOut();
+    ZoomCameraOut(cam);
   }
 
-  int w = earth->w;
-  int h = earth->h;
+  int w = earth->size.w;
+  int h = earth->size.h;
 
-  int start = cam->Clip(&w, &h);
+  int start = ClipCamera(cam, &w, &h);
 
   int size = ceil(cam->tile_size / cam->zoom);
 
@@ -96,10 +98,10 @@ void DrawGame() {
 
   for (int y = 0; y < h; y++) {
     for (int x = 0; x < w; x++) {
-      map::Tile t = earth->tiles[start + x];
+      Tile t = earth->tiles[start + x];
       tile.x = 0;
 
-      if (t.terrain == map::OCEAN) {
+      if (t.terrain == OCEAN) {
         SDL_RenderCopy(renderer, water->texture, &tile, &rect);
       } else {
         tile.x = ((t.terrain - 1) % 5) * 50;
@@ -111,7 +113,7 @@ void DrawGame() {
     }
     rect.x = 0;
     rect.y += size;
-    start += earth->w;
+    start += earth->size.w;
   }
 
   SDL_RenderPresent(renderer);
@@ -155,9 +157,9 @@ int main(int argc, char* args[]) {
   SDL_GetMouseState(&keyboard->x, &keyboard->y);
 
   // Set map values
-  earth->w = 200;
-  earth->h = 150;
-  earth->Build();
+  earth->size.w = 200;
+  earth->size.h = 150;
+  BuildMap(earth);
 
   // Set camera values
   cam->tile_size = 50;

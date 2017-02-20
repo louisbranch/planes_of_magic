@@ -1,5 +1,5 @@
-OBJS = input/keyboard.cpp math/math.cpp camera/camera.cpp map/map.cpp img/img.cpp
-TEST = camera/camera_test.cpp
+OBJS = input/keyboard.cpp img/img.cpp
+TEST = camera_test.cpp
 
 CC = clang
 
