@@ -1,4 +1,4 @@
-OBJS = input/keyboard.cpp img/img.cpp
+OBJS =
 TEST = camera_test.cpp
 
 CC = clang

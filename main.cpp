@@ -4,9 +4,8 @@
 #include <SDL2/SDL.h>
 
 #include "camera.h"
-#include "img/img.h"
-#include "input/keyboard.h"
 #include "map.h"
+#include "mm_layer.h"
 
 const int FPS = 60;
 const char* title = "Worlds";
@@ -17,14 +16,14 @@ SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 Mode mode = GameMode;
 
-auto keyboard = new input::Keyboard();
+auto input = new Input();
 auto cam = new Camera();
 auto earth = new Map();
-auto land = new img::Img();
-auto water = new img::Img();
+auto land = new Img();
+auto water = new Img();
 
 void DrawMenu() {
-  if (keyboard->keys[input::ESC] == input::KEY_PRESSED) {
+  if (input->buttons[ESC] == BUTTON_PRESSED) {
     mode = GameMode;
   }
 
@@ -47,39 +46,37 @@ void DrawGame() {
   double scroll_x = cam->win_size.w * 0.05;
   double scroll_y = cam->win_size.h * 0.05;
 
-  if (keyboard->keys[input::ESC] == input::KEY_PRESSED) {
+  if (input->buttons[ESC] == BUTTON_PRESSED) {
     mode = MenuMode;
   }
 
-  if (keyboard->y < scroll_y ||
-      keyboard->keys[input::UP] == input::KEY_PRESSED ||
-      keyboard->keys[input::UP] == input::KEY_HELD) {
+  if (input->pos.y < scroll_y || input->buttons[UP] == BUTTON_PRESSED ||
+      input->buttons[UP] == BUTTON_HELD) {
     MoveCameraUp(cam);
   }
 
-  if (keyboard->y > (cam->win_size.h - scroll_y) ||
-      keyboard->keys[input::DOWN] == input::KEY_PRESSED ||
-      keyboard->keys[input::DOWN] == input::KEY_HELD) {
+  if (input->pos.y > (cam->win_size.h - scroll_y) ||
+      input->buttons[DOWN] == BUTTON_PRESSED ||
+      input->buttons[DOWN] == BUTTON_HELD) {
     MoveCameraDown(cam);
   }
 
-  if (keyboard->x < scroll_x ||
-      keyboard->keys[input::LEFT] == input::KEY_PRESSED ||
-      keyboard->keys[input::LEFT] == input::KEY_HELD) {
+  if (input->pos.x < scroll_x || input->buttons[LEFT] == BUTTON_PRESSED ||
+      input->buttons[LEFT] == BUTTON_HELD) {
     MoveCameraLeft(cam);
   }
 
-  if (keyboard->x > (cam->win_size.w - scroll_x) ||
-      keyboard->keys[input::RIGHT] == input::KEY_PRESSED ||
-      keyboard->keys[input::RIGHT] == input::KEY_HELD) {
+  if (input->pos.x > (cam->win_size.w - scroll_x) ||
+      input->buttons[RIGHT] == BUTTON_PRESSED ||
+      input->buttons[RIGHT] == BUTTON_HELD) {
     MoveCameraRight(cam);
   }
 
-  if (keyboard->keys[input::ZOOM_IN] == input::KEY_PRESSED) {
+  if (input->buttons[ZOOM_IN] == BUTTON_PRESSED) {
     ZoomCameraIn(cam);
   }
 
-  if (keyboard->keys[input::ZOOM_OUT] == input::KEY_PRESSED) {
+  if (input->buttons[ZOOM_OUT] == BUTTON_PRESSED) {
     ZoomCameraOut(cam);
   }
 
@@ -149,12 +146,14 @@ int main(int argc, char* args[]) {
   }
 
   // Load assets
-  land->Load(renderer, "assets/imgs/land.png");
-  water->Load(renderer, "assets/imgs/water.png");
+  LoadImg(renderer, land, "assets/imgs/land.png");
+  LoadImg(renderer, water, "assets/imgs/water.png");
 
-  // Set keyboard values
+  // Set input values
   SDL_PumpEvents();
-  SDL_GetMouseState(&keyboard->x, &keyboard->y);
+  s32 x, y;
+
+  SDL_GetMouseState(&input->pos.x, &input->pos.y);
 
   // Set map values
   earth->size.w = 200;
@@ -173,9 +172,9 @@ int main(int argc, char* args[]) {
   while (1) {
     uint32_t start = SDL_GetTicks();
 
-    keyboard->ProcessInput();
+    ProcessInput(input);
 
-    if (keyboard->keys[input::QUIT] == input::KEY_PRESSED) {
+    if (input->buttons[QUIT] == BUTTON_PRESSED) {
       break;
     }
 
@@ -188,7 +187,7 @@ int main(int argc, char* args[]) {
         break;
     }
 
-    keyboard->UpdateState();
+    UpdateInputState(input);
 
     uint32_t now = SDL_GetTicks() - start;
 
