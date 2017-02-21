@@ -6,6 +6,7 @@
 #include "camera.h"
 #include "map.h"
 #include "mm_layer.h"
+#include "unit.h"
 
 const int FPS = 60;
 const char* title = "Worlds";
@@ -21,6 +22,8 @@ auto cam = new Camera();
 auto earth = new Map();
 auto land = new Img();
 auto water = new Img();
+auto hero = new Unit();
+auto fighter = new Img();
 
 void DrawMenu() {
   if (input->buttons[ESC_BUTTON] == BUTTON_PRESSED) {
@@ -91,28 +94,31 @@ void DrawGame() {
   SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xff);
   SDL_RenderClear(renderer);
 
-  SDL_Rect rect = {0, 0, size, size};
-  SDL_Rect tile = {0, 0, 50, 50};
+  SDL_Rect dst = {0, 0, size, size};
+  SDL_Rect src = {0, 0, 50, 50};
 
   for (int y = 0; y < h; y++) {
     for (int x = 0; x < w; x++) {
       Tile t = earth->tiles[start + x];
-      tile.x = 0;
 
       if (t.terrain == OCEAN) {
-        SDL_RenderCopy(renderer, water->texture, &tile, &rect);
+        SDL_RenderCopy(renderer, water->texture, &src, &dst);
       } else {
-        tile.x = ((t.terrain - 1) % 5) * 50;
-
-        SDL_RenderCopy(renderer, land->texture, &tile, &rect);
+        src.x = ((t.terrain - 1) % 5) * 50;
+        SDL_RenderCopy(renderer, land->texture, &src, &dst);
       }
 
-      rect.x += size;
+      dst.x += size;
+      src.x = 0;
     }
-    rect.x = 0;
-    rect.y += size;
+    dst.x = 0;
+    dst.y += size;
     start += earth->size.w;
   }
+
+  dst.x = cam->win_size.w / 2;
+  dst.y = cam->win_size.h / 2;
+  SDL_RenderCopy(renderer, fighter->texture, &src, &dst);
 
   SDL_RenderPresent(renderer);
 }
@@ -149,6 +155,7 @@ int main(int argc, char* args[]) {
   // Load assets
   LoadImg(renderer, land, "assets/imgs/land.png");
   LoadImg(renderer, water, "assets/imgs/water.png");
+  LoadImg(renderer, fighter, "assets/imgs/fighter.png");
 
   // Set input values
   SDL_PumpEvents();
@@ -168,10 +175,15 @@ int main(int argc, char* args[]) {
   cam->max_zoom = 3;
   cam->zoom = 1;
 
+  // set hero values
+  hero->pos.x = 0;
+  hero->pos.y = 0;
+  hero->speed = 1;
+
   uint32_t delay = 1000 / FPS;
 
   while (1) {
-    uint32_t start = SDL_GetTicks();
+    u32 start = Time();
 
     ProcessInput(input);
 

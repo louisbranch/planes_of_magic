@@ -54,6 +54,10 @@ struct Input {
   Point2D pos;
 };
 
+inline u32 Time() {
+  return SDL_GetTicks();
+}
+
 inline void LoadImg(SDL_Renderer* renderer, Img* img, const char* file) {
   SDL_Surface* image = IMG_Load(file);
 
@@ -126,7 +130,8 @@ inline void ProcessInput(Input* input) {
           input->buttons[ZOOM_IN_BUTTON] = BUTTON_PRESSED;
         }
 
-        if (event.motion.x < 0 && input->buttons[ZOOM_OUT_BUTTON] == BUTTON_EMPTY) {
+        if (event.motion.x < 0 &&
+            input->buttons[ZOOM_OUT_BUTTON] == BUTTON_EMPTY) {
           input->buttons[ZOOM_OUT_BUTTON] = BUTTON_PRESSED;
         }
         break;
