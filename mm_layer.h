@@ -19,21 +19,21 @@ enum BUTTON_STATE {
 };
 
 enum BUTTON {
-  ESC,
-  SELECT,
-  ACTION,
-  HOLD,
-  NEXT,
-  UP,
-  DOWN,
-  LEFT,
-  RIGHT,
-  ZOOM_IN,
-  ZOOM_OUT,
-  QUIT
+  ESC_BUTTON,
+  SELECT_BUTTON,
+  ACTION_BUTTON,
+  HOLD_BUTTON,
+  NEXT_BUTTON,
+  UP_BUTTON,
+  DOWN_BUTTON,
+  LEFT_BUTTON,
+  RIGHT_BUTTON,
+  ZOOM_IN_BUTTON,
+  ZOOM_OUT_BUTTON,
+  QUIT_BUTTON
 };
 
-const int MAX_BUTTONS = QUIT + 1;
+const int MAX_BUTTONS = QUIT_BUTTON + 1;
 
 SDL_Keycode key_mapping[MAX_BUTTONS] = {
     SDLK_ESCAPE,        // ESC
@@ -82,7 +82,7 @@ inline void ProcessInput(Input* input) {
   while (SDL_PollEvent(&event) != 0) {
     switch (event.type) {
       case SDL_QUIT:
-        input->buttons[QUIT] = BUTTON_PRESSED;
+        input->buttons[QUIT_BUTTON] = BUTTON_PRESSED;
         break;
       case SDL_KEYUP:
         sym = event.key.keysym.sym;
@@ -121,12 +121,13 @@ inline void ProcessInput(Input* input) {
         }
         break;
       case SDL_MOUSEWHEEL:
-        if (event.motion.x > 0 && input->buttons[ZOOM_IN] == BUTTON_EMPTY) {
-          input->buttons[ZOOM_IN] = BUTTON_PRESSED;
+        if (event.motion.x > 0 &&
+            input->buttons[ZOOM_IN_BUTTON] == BUTTON_EMPTY) {
+          input->buttons[ZOOM_IN_BUTTON] = BUTTON_PRESSED;
         }
 
-        if (event.motion.x < 0 && input->buttons[ZOOM_OUT] == BUTTON_EMPTY) {
-          input->buttons[ZOOM_OUT] = BUTTON_PRESSED;
+        if (event.motion.x < 0 && input->buttons[ZOOM_OUT_BUTTON] == BUTTON_EMPTY) {
+          input->buttons[ZOOM_OUT_BUTTON] = BUTTON_PRESSED;
         }
         break;
     }
@@ -134,12 +135,12 @@ inline void ProcessInput(Input* input) {
 }
 
 inline void UpdateInputState(Input* input) {
-  if (input->buttons[ZOOM_IN] == BUTTON_PRESSED) {
-    input->buttons[ZOOM_IN] = BUTTON_EMPTY;
+  if (input->buttons[ZOOM_IN_BUTTON] == BUTTON_PRESSED) {
+    input->buttons[ZOOM_IN_BUTTON] = BUTTON_EMPTY;
   }
 
-  if (input->buttons[ZOOM_OUT] == BUTTON_PRESSED) {
-    input->buttons[ZOOM_OUT] = BUTTON_EMPTY;
+  if (input->buttons[ZOOM_OUT_BUTTON] == BUTTON_PRESSED) {
+    input->buttons[ZOOM_OUT_BUTTON] = BUTTON_EMPTY;
   }
 
   for (int i = 0; i < MAX_BUTTONS; i++) {

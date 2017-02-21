@@ -23,7 +23,7 @@ auto land = new Img();
 auto water = new Img();
 
 void DrawMenu() {
-  if (input->buttons[ESC] == BUTTON_PRESSED) {
+  if (input->buttons[ESC_BUTTON] == BUTTON_PRESSED) {
     mode = GameMode;
   }
 
@@ -46,37 +46,38 @@ void DrawGame() {
   double scroll_x = cam->win_size.w * 0.05;
   double scroll_y = cam->win_size.h * 0.05;
 
-  if (input->buttons[ESC] == BUTTON_PRESSED) {
+  if (input->buttons[ESC_BUTTON] == BUTTON_PRESSED) {
     mode = MenuMode;
   }
 
-  if (input->pos.y < scroll_y || input->buttons[UP] == BUTTON_PRESSED ||
-      input->buttons[UP] == BUTTON_HELD) {
+  if (input->pos.y < scroll_y || input->buttons[UP_BUTTON] == BUTTON_PRESSED ||
+      input->buttons[UP_BUTTON] == BUTTON_HELD) {
     MoveCameraUp(cam);
   }
 
   if (input->pos.y > (cam->win_size.h - scroll_y) ||
-      input->buttons[DOWN] == BUTTON_PRESSED ||
-      input->buttons[DOWN] == BUTTON_HELD) {
+      input->buttons[DOWN_BUTTON] == BUTTON_PRESSED ||
+      input->buttons[DOWN_BUTTON] == BUTTON_HELD) {
     MoveCameraDown(cam);
   }
 
-  if (input->pos.x < scroll_x || input->buttons[LEFT] == BUTTON_PRESSED ||
-      input->buttons[LEFT] == BUTTON_HELD) {
+  if (input->pos.x < scroll_x ||
+      input->buttons[LEFT_BUTTON] == BUTTON_PRESSED ||
+      input->buttons[LEFT_BUTTON] == BUTTON_HELD) {
     MoveCameraLeft(cam);
   }
 
   if (input->pos.x > (cam->win_size.w - scroll_x) ||
-      input->buttons[RIGHT] == BUTTON_PRESSED ||
-      input->buttons[RIGHT] == BUTTON_HELD) {
+      input->buttons[RIGHT_BUTTON] == BUTTON_PRESSED ||
+      input->buttons[RIGHT_BUTTON] == BUTTON_HELD) {
     MoveCameraRight(cam);
   }
 
-  if (input->buttons[ZOOM_IN] == BUTTON_PRESSED) {
+  if (input->buttons[ZOOM_IN_BUTTON] == BUTTON_PRESSED) {
     ZoomCameraIn(cam);
   }
 
-  if (input->buttons[ZOOM_OUT] == BUTTON_PRESSED) {
+  if (input->buttons[ZOOM_OUT_BUTTON] == BUTTON_PRESSED) {
     ZoomCameraOut(cam);
   }
 
@@ -174,7 +175,7 @@ int main(int argc, char* args[]) {
 
     ProcessInput(input);
 
-    if (input->buttons[QUIT] == BUTTON_PRESSED) {
+    if (input->buttons[QUIT_BUTTON] == BUTTON_PRESSED) {
       break;
     }
 
